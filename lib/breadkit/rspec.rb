@@ -12,12 +12,18 @@ RSpec::Matchers.define :connect do |left, right|
   match do |circuit|
     raise ArgumentError, "expected a Breadkit::Circuit" unless circuit.is_a?(Breadkit::Circuit)
 
-    state = circuit.states("all").find { |candidate| candidate.name == @state_name } if @state_name
+    if @state_name
+      mode = @state_name.include?(",") ? "all" : "single"
+      state = circuit.states(mode, budget: 256).find { |candidate| candidate.name == @state_name }
+    end
     raise ArgumentError, "unknown circuit state: #{@state_name}" if @state_name && !state
 
     @left_net = circuit.net_of(left, state)
     @right_net = circuit.net_of(right, state)
-    @left_net && @right_net && @left_net.equal?(@right_net)
+    raise ArgumentError, "unknown circuit reference: #{left}" unless @left_net
+    raise ArgumentError, "unknown circuit reference: #{right}" unless @right_net
+
+    @left_net.equal?(@right_net)
   end
 
   failure_message do

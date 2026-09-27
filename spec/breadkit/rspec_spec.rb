@@ -7,10 +7,12 @@ RSpec.describe "Breadkit matchers" do
     expect(circuit).to connect("SW1.1", :VCC)
     expect(circuit).to connect("R1.2", "D1.anode")
     expect(circuit).not_to connect("R1.1", :VCC)
-    expect(circuit).not_to connect("missing", :VCC)
+    expect { expect(circuit).not_to connect("missing", :VCC) }
+      .to raise_error(ArgumentError, /unknown circuit reference: missing/)
   end
 
   it "checks the requested switch state" do
+    expect(circuit).to receive(:states).with("single", budget: 256).at_least(:once).and_call_original
     expect(circuit).to connect("R1.1", :VCC).in_state("SW1")
     expect(circuit).not_to connect("R1.1", :GND).in_state("SW1")
     expect { expect(circuit).to connect("R1.1", :VCC).in_state("MISSING") }
