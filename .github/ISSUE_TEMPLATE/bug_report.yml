@@ -1,0 +1,22 @@
+name: Bug report
+description: Report a matcher defect
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Include a minimal circuit and expectation that reproduce the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Expected and actual output
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Ruby, Breadkit, and RSpec versions
+    validations:
+      required: true
