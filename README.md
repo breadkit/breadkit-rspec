@@ -38,6 +38,8 @@ end
 `connect` resolves pin aliases, named nets, and hole IDs through
 `Breadkit::Circuit#net_of`. It fails when either reference is unknown. Use
 `.in_state("SW1")` for a switch state; an unknown state raises an error.
+Use `.in_state("SW1,SW2")` to close both named switches while leaving the
+others open. Named states do not require enumerating every switch combination.
 
 ## Development
 

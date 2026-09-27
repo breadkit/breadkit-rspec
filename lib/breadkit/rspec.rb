@@ -13,10 +13,15 @@ RSpec::Matchers.define :connect do |left, right|
     raise ArgumentError, "expected a Breadkit::Circuit" unless circuit.is_a?(Breadkit::Circuit)
 
     if @state_name
-      mode = @state_name.include?(",") ? "all" : "single"
-      state = circuit.states(mode, budget: 256).find { |candidate| candidate.name == @state_name }
+      names = @state_name.split(",", -1)
+      switches = names.map { |name| circuit.components[name] }
+      valid = names.uniq.length == names.length &&
+              switches.all? { |component| component && Array(component.part.data["switch"]).any? }
+      raise ArgumentError, "unknown circuit state: #{@state_name}" unless valid
+
+      closed = switches.flat_map { |component| Array(component.part.data["switch"]).map { |pair| [component, pair] } }
+      state = Breadkit::State.new(name: @state_name, closed_switches: closed)
     end
-    raise ArgumentError, "unknown circuit state: #{@state_name}" if @state_name && !state
 
     @left_net = circuit.net_of(left, state)
     @right_net = circuit.net_of(right, state)
