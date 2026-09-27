@@ -2,10 +2,15 @@
 
 RSpec matchers for resolved [Breadkit](https://github.com/breadkit/breadkit) circuits.
 
-## Install from source
+## Install
 
-The first gem release is pending. Until then, add both source repositories to
-your Gemfile:
+Once Breadkit core 0.2.0 and this gem are published, install the matcher gem:
+
+```sh
+gem install breadkit-rspec
+```
+
+To use an unreleased main checkout, add both source repositories to your Gemfile:
 
 ```ruby
 gem "breadkit", git: "https://github.com/breadkit/breadkit.git", branch: "main"
