@@ -1,0 +1,5 @@
+module Breadkit
+  module RSpec
+    VERSION: String
+  end
+end
