@@ -1,30 +1,43 @@
-# breadkit-rspec
+<p align="center">
+  <a href="https://github.com/breadkit/breadkit"><img src="https://raw.githubusercontent.com/breadkit/breadkit/main/site/favicon.svg" width="72" height="72" alt="Breadkit logo"></a>
+</p>
 
-RSpec matchers for resolved [Breadkit](https://github.com/breadkit/breadkit) circuits.
+<h1 align="center">breadkit-rspec</h1>
 
-## Install
+<p align="center">
+  <strong>Test Breadkit circuit connections and switch states with RSpec.</strong>
+</p>
 
-Requires Ruby 3.3 or newer and Breadkit core 0.2.x:
+<p align="center">
+  <a href="https://rubygems.org/gems/breadkit-rspec"><img src="https://img.shields.io/gem/v/breadkit-rspec.svg" alt="RubyGems version"></a>
+  <a href="https://github.com/breadkit/breadkit-rspec/actions/workflows/ci.yml"><img src="https://github.com/breadkit/breadkit-rspec/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <img src="https://img.shields.io/badge/Ruby-%3E%3D%203.3-CC342D.svg" alt="Ruby 3.3 or newer">
+  <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
+</p>
+
+Assert that pins, board holes, and named nets share a connection in a resolved
+[Breadkit](https://github.com/breadkit/breadkit) circuit. Check connections in
+named switch states with the same matcher.
+
+## Quick start
+
+Install in an RSpec project with Ruby 3.3 or newer. `breadkit-rspec` depends on
+Breadkit 0.2.x:
 
 ```sh
 gem install breadkit-rspec
 ```
 
-If the required releases are not yet on RubyGems, add both main checkouts to
-your Gemfile:
+With Bundler, add `gem "breadkit-rspec", "~> 0.1"` to your Gemfile instead.
 
-```ruby
-gem "breadkit", git: "https://github.com/breadkit/breadkit.git", branch: "main"
-gem "breadkit-rspec", git: "https://github.com/breadkit/breadkit-rspec.git", branch: "main"
-```
-
-Require the matchers in `spec/spec_helper.rb`:
+Load the matcher in `spec/spec_helper.rb`:
 
 ```ruby
 require "breadkit/rspec"
 ```
 
-## Test a circuit
+With Breadkit's [LED and button example](https://github.com/breadkit/breadkit/blob/main/examples/01_led_button.bk.rb)
+saved as `circuits/led.bk.rb`, add a spec:
 
 ```ruby
 RSpec.describe "LED circuit" do
@@ -35,22 +48,34 @@ RSpec.describe "LED circuit" do
     expect(circuit).not_to connect("D1.cathode", :VCC)
   end
 
-  it "connects the switched input when pressed" do
+  it "connects the input when the button is pressed" do
     expect(circuit).to connect("R1.1", :VCC).in_state("SW1")
   end
 end
 ```
 
-`connect` resolves pin aliases, named nets, and hole IDs through
-`Breadkit::Circuit#net_of`. It fails when either reference is unknown. Use
-`.in_state("SW1")` for a switch state; an unknown state raises an error.
-Use `.in_state("SW1,SW2")` to close both named switches while leaving the
-others open. Named states do not require enumerating every switch combination.
+`connect` accepts pin aliases, hole IDs, and named nets. An unknown reference
+raises `ArgumentError`; a failed connection expectation reports the resolved
+nets.
+
+## Switch states
+
+Use `.in_state("SW1")` to close one switch or `.in_state("SW1,SW2")` to close
+several. Other switches stay open, so you do not need to enumerate every switch
+combination. Unknown or repeated switch names raise `ArgumentError`.
 
 ## Development
 
-Clone `breadkit` and `breadkit-rspec` as sibling directories, then run
-`bundle install` and `bundle exec rake` here. The gem is independent of
-`breadkit-lint` and `breadkit-render`.
+Clone Breadkit and this gem as sibling directories, then run:
 
-MIT licensed. See [LICENSE.txt](LICENSE.txt).
+```sh
+git clone https://github.com/breadkit/breadkit.git
+git clone https://github.com/breadkit/breadkit-rspec.git
+cd breadkit-rspec
+bundle install
+bundle exec rake
+```
+
+## License
+
+[MIT](LICENSE.txt).
