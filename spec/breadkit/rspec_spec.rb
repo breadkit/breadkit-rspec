@@ -3,7 +3,7 @@
 require "tempfile"
 
 RSpec.describe "Breadkit matchers" do
-  let(:circuit) { Breadkit.load(File.expand_path("../../../breadkit/examples/01_led_button.bk.rb", __dir__)) }
+  let(:circuit) { Breadkit.load(File.expand_path("../fixtures/led_button.bk.rb", __dir__)) }
 
   it "matches two references on the same resolved net" do
     expect(circuit).to connect("SW1.1", :VCC)

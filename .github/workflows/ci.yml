@@ -21,11 +21,15 @@ jobs:
             ruby: "4.0"
           - os: macos-latest
             ruby: "4.0"
+          - os: ubuntu-latest
+            ruby: "4.0"
+            breadkit_source: published
     defaults:
       run:
         working-directory: breadkit-rspec
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: matrix.breadkit_source != 'published'
         with:
           repository: breadkit/breadkit
           ref: main
@@ -41,6 +45,8 @@ jobs:
           bundler-cache: true
           working-directory: breadkit-rspec
       - run: bundle exec rake
+        env:
+          BREADKIT_SOURCE: ${{ matrix.breadkit_source }}
 
   package:
     runs-on: ubuntu-latest
