@@ -4,13 +4,14 @@ RSpec matchers for resolved [Breadkit](https://github.com/breadkit/breadkit) cir
 
 ## Install
 
-Once Breadkit core 0.2.0 and this gem are published, install the matcher gem:
+Requires Ruby 3.3 or newer and Breadkit core 0.2.x:
 
 ```sh
 gem install breadkit-rspec
 ```
 
-To use an unreleased main checkout, add both source repositories to your Gemfile:
+If the required releases are not yet on RubyGems, add both main checkouts to
+your Gemfile:
 
 ```ruby
 gem "breadkit", git: "https://github.com/breadkit/breadkit.git", branch: "main"
