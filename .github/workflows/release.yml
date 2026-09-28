@@ -42,7 +42,7 @@ jobs:
       - name: Build with strict gem validation
         run: gem build --strict breadkit-rspec.gemspec --output "$RUNNER_TEMP/package.gem"
       - name: Verify Breadkit dependency is published
-        run: gem install breadkit --version '~> 0.2.0' --no-document
+        run: gem list --remote --exact breadkit --version '~> 0.2.0' | grep -q '^breadkit ('
       - name: Configure RubyGems Trusted Publishing
         uses: rubygems/configure-rubygems-credentials@dc5a8d8553e6ee01fc26761a49e99e733d17954a # v2.1.0
       - name: Publish breadkit-rspec
